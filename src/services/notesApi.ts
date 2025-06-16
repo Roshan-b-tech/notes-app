@@ -27,8 +27,14 @@ class NotesApiService {
     }
   }
 
-  async getAllNotes(): Promise<Note[]> {
-    return this.request<Note[]>('/notes');
+  async getAllNotes({ page = 1, limit = 20, sortBy = 'createdAt', order = 'desc' } = {}): Promise<Note[]> {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+      sortBy,
+      order,
+    });
+    return this.request<Note[]>(`/notes?${params.toString()}`);
   }
 
   async searchNotes(query: string): Promise<Note[]> {

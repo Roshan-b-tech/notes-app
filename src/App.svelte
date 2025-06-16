@@ -30,6 +30,12 @@
 
   let isMobile = false;
 
+  let currentPage = 1;
+  let totalPages = 1;
+  let sortBy: "createdAt" | "title" = "createdAt";
+  let order: "asc" | "desc" = "desc";
+  const limit = 20;
+
   function animateDescription() {
     if (typingForward) {
       if (typingIndex < fullDescription.length) {
@@ -81,8 +87,14 @@
     try {
       isLoading.set(true);
       error.set(null);
-      const fetchedNotes = await notesApi.getAllNotes();
+      const fetchedNotes = await notesApi.getAllNotes({
+        page: currentPage,
+        limit,
+        sortBy,
+        order,
+      });
       notes.set(fetchedNotes);
+      totalPages = fetchedNotes.length < limit ? currentPage : currentPage + 1;
     } catch (err) {
       error.set("Failed to load notes. Please check your API configuration.");
       console.error("Error loading notes:", err);
@@ -434,6 +446,86 @@
           </div>
         </div>
       {/if}
+
+      <!-- Sorting and Pagination Controls -->
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6"
+      >
+        <div class="flex items-center gap-2">
+          <label for="sortBy" class="font-semibold">Sort by:</label>
+          <select
+            id="sortBy"
+            bind:value={sortBy}
+            on:change={() => {
+              currentPage = 1;
+              loadNotes();
+            }}
+            class="rounded-lg px-3 py-2 border focus:outline-none focus:ring-2 transition-colors duration-500
+              {$theme === 'dark'
+              ? 'bg-gray-800 text-white border-gray-700 focus:ring-blue-400'
+              : ''}
+              {$theme === 'red'
+              ? 'bg-red-50 text-red-900 border-red-300 focus:ring-red-400'
+              : ''}
+              {$theme === 'blue'
+              ? 'bg-blue-50 text-blue-900 border-blue-300 focus:ring-blue-400'
+              : ''}
+              {$theme === 'green'
+              ? 'bg-green-50 text-green-900 border-green-300 focus:ring-green-400'
+              : ''}"
+          >
+            <option value="createdAt">Date</option>
+            <option value="title">Title</option>
+          </select>
+          <button
+            on:click={() => {
+              order = order === "asc" ? "desc" : "asc";
+              currentPage = 1;
+              loadNotes();
+            }}
+            class="ml-2 px-2 py-1 rounded border transition-colors duration-500
+              {$theme === 'dark'
+              ? 'bg-gray-700 text-white border-gray-600 hover:bg-gray-600'
+              : ''}
+              {$theme === 'red'
+              ? 'bg-red-200 text-red-900 border-red-300 hover:bg-red-300'
+              : ''}
+              {$theme === 'blue'
+              ? 'bg-blue-200 text-blue-900 border-blue-300 hover:bg-blue-300'
+              : ''}
+              {$theme === 'green'
+              ? 'bg-green-200 text-green-900 border-green-300 hover:bg-green-300'
+              : ''}"
+          >
+            {order === "asc" ? "↑" : "↓"}
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            on:click={() => {
+              if (currentPage > 1) {
+                currentPage--;
+                loadNotes();
+              }
+            }}
+            disabled={currentPage === 1}
+            class="px-3 py-1 rounded border border-gray-300 bg-white/20 hover:bg-white/40 disabled:opacity-50"
+            >Prev</button
+          >
+          <span>Page {currentPage}</span>
+          <button
+            on:click={() => {
+              if (filteredNotes.length === limit) {
+                currentPage++;
+                loadNotes();
+              }
+            }}
+            disabled={filteredNotes.length < limit}
+            class="px-3 py-1 rounded border border-gray-300 bg-white/20 hover:bg-white/40 disabled:opacity-50"
+            >Next</button
+          >
+        </div>
+      </div>
 
       <!-- Notes Grid -->
       <NotesGrid
