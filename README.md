@@ -66,3 +66,21 @@ Each note:
 
 
 Made with ❤️ using Svelte and TailwindCSS.
+
+---
+
+## 🚀 What I'd Do With More Time
+
+- Add infinite scroll as an alternative to pagination
+- Implement user authentication (login/signup)
+- Add note categories/tags and filtering by tag
+- Allow image/file attachments in notes
+- Add drag-and-drop note reordering
+- Add collaborative editing (real-time sync)
+- Polish accessibility (a11y) and keyboard navigation
+- Add more theme options and user-customizable themes
+- Add unit and integration tests
+- Polish animations and micro-interactions
+- Add offline support (PWA)
+- Improve error handling and API fallback
+- Add a public demo and more documentation/screenshots
