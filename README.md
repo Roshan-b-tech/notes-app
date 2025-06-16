@@ -84,3 +84,16 @@ Made with ❤️ using Svelte and TailwindCSS.
 - Add offline support (PWA)
 - Improve error handling and API fallback
 - Add a public demo and more documentation/screenshots
+
+## ⚖️ Trade-offs & Assumptions
+
+- Used mockapi.io for the backend to focus on frontend features and speed up development.
+- Assumed all users share the same notes (no authentication/multi-user support).
+- Pagination is client-driven and based on API's page/limit, but total note count is estimated (mockapi.io does not always return total count).
+- Sorting is limited to fields supported by the API (title, createdAt).
+- Theme system uses Tailwind utility classes and is not persisted across sessions.
+- Optimistic UI is not fully implemented for all async actions.
+- Accessibility (a11y) is improved but not fully audited.
+- No unit or integration tests due to time constraints.
+- Assumed modern browsers and devices (no legacy browser support).
+- File structure and code style optimized for clarity and learning, not for large-scale production.
